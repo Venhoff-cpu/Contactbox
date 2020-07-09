@@ -4,8 +4,8 @@ from django.db import models
 
 
 class Person(models.Model):
-    first_name = models.CharField(max_lenght=64)
-    last_name = models.CharField(max_lenght=64)
+    first_name = models.CharField(max_length=64)
+    last_name = models.CharField(max_length=64)
     description = models.TextField(blank=True)
     photo = models.ImageField(upload_to="person_photo", null=True)
 
