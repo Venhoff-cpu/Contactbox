@@ -15,7 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from mailbox_app.views import Main, PersonDetail, AddAddress, AddPerson, AddPhone, AddEmail, ModifyPerson, \
+    DeletePerson, GroupsList, GroupDetail, AddGroup, AddPersonToGroup
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', Main.as_view(), name="main"),
+    path('person/<int:person_id>', PersonDetail.as_view(), name="person"),
+    path('person/<int:person_id>/add-phone', AddPhone.as_view(), name="add_phone"),
+    path('person/<int:person_id>/add-email', AddEmail.as_view(), name="add_email"),
+    path('person/<int:person_id>/modify', ModifyPerson.as_view(), name="modify_person"),
+    path('new-person/', AddPerson.as_view(), name="add_person"),
+    path('add-address', AddAddress.as_view(), name="add_address"),
+    path('delete/<int:person_id>', DeletePerson.as_view(), name="delete"),
+    path('groups/', GroupsList.as_view, name="groups"),
+    path('groups/<int:group_id>', GroupDetail.as_view, name="groups_detail"),
+    path('groups/<int:group_id>/add-person', AddPersonToGroup.as_view, name="add_person_to_group"),
+    path('add-group/', AddGroup, name="add_group"),
 ]

@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 
 class Person(models.Model):
     first_name = models.CharField(max_length=64)
@@ -36,7 +34,7 @@ class Email(models.Model):
     SLUZBOWY = "2"
 
     TYPE_OF_MAIL = [
-        (PRYWATNY, "PRYWATNY"),
+        (PRYWATNY, "Prywatny"),
         (SLUZBOWY, "Służbowy"),
     ]
     number = models.IntegerField()

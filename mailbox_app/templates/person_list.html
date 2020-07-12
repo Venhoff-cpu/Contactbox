@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}
+Lista Osób
+{% endblock %}
+
+{% block content %}
+<!--    <form action="" methode="GET">-->
+<!--        <label for="name">Nazwa sali:</label>-->
+<!--        <input type="text" id="name" name="name">-->
+<!--        <label for="capacity">Minimalna pojemność:</label>-->
+<!--        <input type="number" id="capacity" min="1" name="min_capacity">-->
+<!--        <label for="has_projector">Czy posiada projektor?</label>-->
+<!--        <input type="checkbox" id="has_projector" name="has_projector">-->
+<!--        <input type="submit" value="Szukaj">-->
+<!--    </form>-->
+    <div class="table-users">
+        <div class="header">Users</div>
+
+        <table cellspacing="0">
+            <tr>
+                <th>Zdjęcie</th>
+                <th>Nazwisko</th>
+                <th>Imię</th>
+                <th>Opis</th>
+                <th>Akcje</th>
+            </tr>
+
+            <tr>
+                <td><img src="https://i.picsum.photos/id/1005/100/100.jpg" alt="" /></td>
+                <td>Jane Doe</td>
+                <td>jane.doe@foo.com</td>
+                <td>01 800 2000</td>
+                <td>
+                    <form action="{% url 'delete' person_id=1 %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="button" value="{{id}}">Usuń</button>
+                    </form>
+                    <a href="{% url 'modify_person' person_id=1 %}" class="button1">Modyfikuj</a>
+                    <a href="{% url 'person' person_id=1 %}" class="button1">Szczegóły</a>
+                </td>
+            </tr>
+        </table>
+        <a class="button1" href="{% url 'add_person' %}">Dodaj osobę</a>
+    </div>
+{% endblock %}
