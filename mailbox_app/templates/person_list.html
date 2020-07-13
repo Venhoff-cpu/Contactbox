@@ -32,9 +32,9 @@ Lista Osób
                 <td>jane.doe@foo.com</td>
                 <td>01 800 2000</td>
                 <td>
-                    <form action="{% url 'delete' person_id=1 %}" method="POST">
+                    <form action="{% url 'delete' person_id=1 %}" style="display: inline" method="POST">
                         {% csrf_token %}
-                        <button type="submit" class="button" value="{{id}}">Usuń</button>
+                        <button type="submit" class="button1" value="{{id}}">Usuń</button>
                     </form>
                     <a href="{% url 'modify_person' person_id=1 %}" class="button1">Modyfikuj</a>
                     <a href="{% url 'person' person_id=1 %}" class="button1">Szczegóły</a>

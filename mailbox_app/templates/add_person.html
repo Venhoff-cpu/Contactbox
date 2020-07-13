@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dodawanie osób
+{% endblock %}
+
+{% block content %}
+<h3> formularz dodawania nowego kontaktu</h3>
+<form action="#" method="POST" enctype="multipart/form-data">
+    <label for="f_name">Imię:</label>
+    <input type="text" id="f_name" name="first_name" maxlength="64" required>
+    <label for="l_name">Nazwisko:</label>
+    <input type="text" id="l_name" name="last_name" maxlength="64" required><br>
+    <label for="desc">Dodatkowy opis:</label>
+    <input type="text" id="desc" name="description" maxlength="250"><br>
+    <label for="zdjecie">Zdjęcie:</label>
+    <input type="file" id="zdjecie" name="photo">
+</form>
+{% endblock %}

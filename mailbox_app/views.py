@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 from django.db import IntegrityError
 
@@ -17,7 +19,21 @@ class PersonDetail(View):
 
 
 class AddPerson(View):
-    pass
+    def get(self, request):
+        return render(request, "add_person.html")
+
+    def post(self, reuqest):
+        name = reuqest.POST.get("first_name")
+        surname = reuqest.POST.get("last_name")
+        description = reuqest.POST.get("description")
+        myfile = reuqest.FILES["photo"]
+        person = Person.ojects.create(
+            first_name=name,
+            last_name=surname,
+            description=description,
+            photo=myfile.name
+        )
+        return redirect("main")
 
 
 class AddAddress(View):

@@ -5,7 +5,7 @@ class Person(models.Model):
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
     description = models.TextField(blank=True)
-    photo = models.ImageField(upload_to="person_photo", null=True)
+    photo = models.ImageField(upload_to="person_photo/", null=True)
 
 
 class Address(models.Model):

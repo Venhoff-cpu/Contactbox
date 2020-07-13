@@ -15,6 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+
 from mailbox_app.views import Main, PersonDetail, AddAddress, AddPerson, AddPhone, AddEmail, ModifyPerson, \
     DeletePerson, GroupsList, GroupDetail, AddGroup, AddPersonToGroup
 
@@ -33,3 +36,6 @@ urlpatterns = [
     path('groups/<int:group_id>/add-person', AddPersonToGroup.as_view, name="add_person_to_group"),
     path('add-group/', AddGroup, name="add_group"),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
