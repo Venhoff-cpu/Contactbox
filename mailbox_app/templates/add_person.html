@@ -5,8 +5,9 @@ Dodawanie osób
 {% endblock %}
 
 {% block content %}
-<h3> formularz dodawania nowego kontaktu</h3>
+<h3> Formularz dodawania nowego kontaktu</h3>
 <form action="#" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
     <label for="f_name">Imię:</label>
     <input type="text" id="f_name" name="first_name" maxlength="64" required>
     <label for="l_name">Nazwisko:</label>
@@ -15,5 +16,6 @@ Dodawanie osób
     <input type="text" id="desc" name="description" maxlength="250"><br>
     <label for="zdjecie">Zdjęcie:</label>
     <input type="file" id="zdjecie" name="photo">
+    <input type="submit" value="Zapisz">
 </form>
 {% endblock %}

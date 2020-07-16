@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib import messages
 from django.db import IntegrityError
 
@@ -11,7 +12,15 @@ from .models import Person, Address, Email, Phone, Group
 
 class Main(View):
     def get(self, request):
-        return render(request, "person_list.html")
+        person_list = Person.objects.all().order_by("first_name", "last_name")
+        paginator = Paginator(person_list, 50)
+
+        page = request.GET.get("page")
+        persons = paginator.get_page(page)
+        ctx = {
+            "persons": persons,
+        }
+        return render(request, "person_list.html", ctx)
 
 
 class PersonDetail(View):
@@ -26,13 +35,14 @@ class AddPerson(View):
         name = reuqest.POST.get("first_name")
         surname = reuqest.POST.get("last_name")
         description = reuqest.POST.get("description")
-        myfile = reuqest.FILES["photo"]
-        person = Person.ojects.create(
+        myfile = reuqest.FILES.get("photo")
+        person = Person.objects.create(
             first_name=name,
             last_name=surname,
             description=description,
-            photo=myfile.name
+            photo=myfile,
         )
+        person.save()
         return redirect("main")
 
 
