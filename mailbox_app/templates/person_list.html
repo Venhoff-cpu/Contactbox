@@ -32,13 +32,17 @@ Lista Osób
                 <td>{{person.last_name}}</td>
                 <td>{{person.description}}</td>
                 <td>
-                    <form action="{% url 'delete' person_id=person.id %}" style="display: inline" method="POST">
+                    <form action="{% url 'delete' person_id=person.id %}" style="display: inline" method="GET">
                         {% csrf_token %}
                         <button type="submit" class="button1">Usuń</button>
                     </form>
                     <a href="{% url 'modify_person' person_id=person.id %}" class="button1">Modyfikuj</a>
                     <a href="{% url 'person' person_id=person.id %}" class="button1">Szczegóły</a>
                 </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Brak użytkowników</td>
             </tr>
             {% endfor %}
         </table>

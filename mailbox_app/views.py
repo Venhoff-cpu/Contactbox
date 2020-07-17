@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.db import IntegrityError
 
 from .models import Person, Address, Email, Phone, Group
-# Create your views here.
 
 
 class Main(View):
@@ -63,7 +62,28 @@ class ModifyPerson(View):
 
 
 class DeletePerson(View):
-    pass
+    def get(self, request, person_id):
+        person = get_object_or_404(Person, pk=person_id)
+        ctx = {
+            "name": person.first_name,
+            "last_name": person.last_name,
+        }
+        return render(request, "delete_person.html", ctx)
+
+    def post(self, request, person_id):
+        if "No" in request.POST.get("del"):
+            return redirect("main")
+        elif "Yes" in request.POST.get("del"):
+            person_to_delete = get_object_or_404(Person, pk=person_id)
+            person_name = person_to_delete.first_name
+            person_surname = person_to_delete.last_name
+            person_to_delete.delete()
+            messages.add_message(request, messages.INFO, f"Uzytkownik {person_name} {person_surname} usunięty z "
+                                                         f"listy uzytkowników")
+            return redirect("main")
+        else:
+            messages.add_message(request, messages.INFO, f"nastąpił nieoczekiwany błąd")
+            return redirect("main")
 
 
 class GroupsList(View):
