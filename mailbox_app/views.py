@@ -35,18 +35,39 @@ class AddPerson(View):
         surname = reuqest.POST.get("last_name")
         description = reuqest.POST.get("description")
         myfile = reuqest.FILES.get("photo")
-        person = Person.objects.create(
+        address = Address.objects.get(pk=reuqest.POST.get("address"))
+        new_person = Person.objects.create(
             first_name=name,
             last_name=surname,
             description=description,
             photo=myfile,
         )
-        person.save()
+        new_person.save()
+        address.person = new_person
         return redirect("main")
 
 
 class AddAddress(View):
-    pass
+
+    def get(self, request):
+        return render(request, "add_address.html")
+
+    def post(self, request):
+        city_name = request.POST.get("city")
+        street_name = request.POSt.get("street")
+        house = request.POST.get("house_no")
+        local = request.POST.get("local_no")
+        postal = request.POST.get("postal_code")
+        new_address = Address.objects.create(
+            city=city_name,
+            street=street_name,
+            house_no=house,
+            local_no=local,
+            postal_code=postal,
+        )
+        new_address.save()
+        messages.add_message(request, messages.INFO, f"Dodano nowy adres")
+        return redirect("main")
 
 
 class AddPhone(View):
