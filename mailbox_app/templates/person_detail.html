@@ -5,5 +5,47 @@ Detale użytkownika
 {% endblock %}
 
 {% block content %}
-
+    <img src="{{person.photo.url}}">
+    <p>Imię: {{ person.first_name }}</p>
+    <p>Nazwisko: {{ person.last_name}}</p>
+    <p>Opis:</p>
+    <textarea readonly="readonly" cols="50" rows="50">{{ person.description }}</textarea>
+    <div>
+        Adress:
+        {% if address %}
+        <p>Miasto: {{ address.city }}</p>
+        <p>Ulica: {{ address.street }}</p>
+        <p>Numer domu: {{ address.house_no }}</p>
+        <p>Numer lokalu: {{ address.local_no }}</p>
+        <p>Kod pocztowy: {{ address.postal_code }}</p>
+        {% empty %}}
+        Nie podano adresu.
+        {% endif %}
+    </div>
+    {% if phones %}
+    <ul>Phones:
+        {% for phone in phones %}
+        <li>{{ phone.number }} - {{ phone.get_type_display }} </li>
+        {% endfor %}
+    </ul>
+    {% empty %}
+    <p> Brak numeru telefonu</p>
+    {% endif %}
+        {% if emails %}
+    <ul>Emails:
+        {% for email in emails %}
+        <li>{{ email.email }} - {{ email.get_type_display }} </li>
+        {% endfor %}
+    </ul>
+    {% empty %}
+    <p>Brak emaila</p>
+    {% endif %}
+    {% if groups %}
+    <p>Należy do grup:</p>
+    <ul>
+        {% for email in emails %}
+        <li><a href="">{{ group.name }}</a> </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 {% endblock %}

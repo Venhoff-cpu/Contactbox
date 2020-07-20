@@ -13,8 +13,9 @@ Dodawanie osób
     <label for="l_name">Nazwisko:</label>
     <input type="text" id="l_name" name="last_name" maxlength="64" required><br>
     <label for="desc">Dodatkowy opis:</label>
-    <input type="text" id="desc" name="description" maxlength="250"><br>
-    <select class="form-control"  name="recipe" id="recipe">
+    <textarea id="desc" name="description" maxlength="250" rows="5" cols="50"></textarea><br>
+    <labe for="address">Adress (opcjonalnie):</labe>
+    <select class="form-control" id="address" name="recipe" id="recipe">
         {% for address in addresses %}
             <option name="address" value="{{address.id}}">
                 {{ address.city }}; {{address.street}} {{address.house_no}}, lokal: {{address.local_no}}
@@ -22,7 +23,7 @@ Dodawanie osób
         {% empty %}
         {% endfor %}
     </select><br>
-    <a href="{% url 'add_adress' %}">Dodaj nowy adres</a>
+    <a href="{% url 'add_address' %}">Dodaj nowy adres</a><br>
     <label for="zdjecie">Zdjęcie:</label>
     <input type="file" id="zdjecie" name="photo">
     <input type="submit" value="Zapisz">

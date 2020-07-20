@@ -48,13 +48,13 @@ Lista Osób
                 <li class="disabled"><span>&laquo;</span></li>
             {% endif %}
             {% for i in persons.paginator.page_range %}
-                {% if recipes.number == i %}
+                {% if persons.number == i %}
                     <li class="active"><span> {{ i }} <span class="sr-only">(current)</span></span></li>
                 {% else %}
                     <li><a href="?page={{ i }}"> {{ i }} </a></li>
                 {% endif %}
             {% endfor %}
-            {% if recipes.has_next %}
+            {% if persons.has_next %}
                 <li><a href="?page={{ persons.next_page_number }}">&raquo;</a></li>
             {% else %}
                 <li class="disabled"><span>&raquo;</span></li>

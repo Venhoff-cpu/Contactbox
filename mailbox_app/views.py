@@ -23,24 +23,35 @@ class Main(View):
 
 
 class PersonDetail(View):
-    pass
+    def get(self, request, person_id):
+        ctx = {}
+        person = get_object_or_404(Person, pk=person_id)
+        ctx["person"] = person
+        ctx["address"] = Address.objects.get(pk=person.address)
+        ctx["phones"] = Phone.objects.filter(person=person.id)
+        ctx["emails"] = Email.objects.filter(person=person.id)
+        ctx["groups"] = Group.objects.filter(person=person.id)
+        return render(request, "person_detail.html", ctx)
 
 
 class AddPerson(View):
     def get(self, request):
-        return render(request, "add_person.html")
+        ctx = {
+            "adrresses": Address.objects.all()
+        }
+        return render(request, "add_person.html", ctx)
 
-    def post(self, reuqest):
-        name = reuqest.POST.get("first_name")
-        surname = reuqest.POST.get("last_name")
-        description = reuqest.POST.get("description")
-        myfile = reuqest.FILES.get("photo")
-        address = Address.objects.get(pk=reuqest.POST.get("address"))
+    def post(self, request):
+        name = request.POST.get("first_name")
+        surname = request.POST.get("last_name")
+        description = request.POST.get("description")
+        myFile = request.FILES.get("photo")
+        address = Address.objects.get(pk=request.POST.get("address"))
         new_person = Person.objects.create(
             first_name=name,
             last_name=surname,
             description=description,
-            photo=myfile,
+            photo=myFile,
         )
         new_person.save()
         address.person = new_person

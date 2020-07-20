@@ -38,7 +38,7 @@ class Email(models.Model):
         (PRYWATNY, "Prywatny"),
         (SLUZBOWY, "Służbowy"),
     ]
-    number = models.IntegerField()
+    email = models.EmailField()
     type = models.CharField(max_length=1, choices=TYPE_OF_MAIL)
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
 
