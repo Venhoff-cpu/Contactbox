@@ -6,7 +6,8 @@ Add adress
 
 {% block content %}
 <h3> Formularz dodawania nowego adresu</h3>
-<form>
+<form action="" method="POST">
+    {% csrf_token %}
     <label for="city_id">Miejscowość</label>
     <input type="text" id="city_id" name="city" maxlength="64" required><br>
     <label for="street_id">Ulica:</label>
@@ -17,5 +18,6 @@ Add adress
     <input type="text" id="local_id" name="local_no" maxlength="8"><br>
     <label for="postal_id">Kod Pocztowy</label>
     <input type="text" id="postal_id" name="postal_code" maxlength="6" required>
+    <input type="submit" value="Zapisz">
 </form>
 {% endblock %}

@@ -27,7 +27,7 @@ class PersonDetail(View):
         ctx = {}
         person = get_object_or_404(Person, pk=person_id)
         ctx["person"] = person
-        ctx["address"] = Address.objects.get(pk=person.address)
+        ctx["address"] = person.address
         ctx["phones"] = Phone.objects.filter(person=person.id)
         ctx["emails"] = Email.objects.filter(person=person.id)
         ctx["groups"] = Group.objects.filter(person=person.id)
@@ -37,7 +37,7 @@ class PersonDetail(View):
 class AddPerson(View):
     def get(self, request):
         ctx = {
-            "adrresses": Address.objects.all()
+            "addresses": Address.objects.all()
         }
         return render(request, "add_person.html", ctx)
 
@@ -46,15 +46,16 @@ class AddPerson(View):
         surname = request.POST.get("last_name")
         description = request.POST.get("description")
         myFile = request.FILES.get("photo")
+        address_id = request.POST.get("address")
+        print(address_id)
         address = Address.objects.get(pk=request.POST.get("address"))
         new_person = Person.objects.create(
             first_name=name,
             last_name=surname,
             description=description,
             photo=myFile,
+            address=address,
         )
-        new_person.save()
-        address.person = new_person
         return redirect("main")
 
 
@@ -65,7 +66,7 @@ class AddAddress(View):
 
     def post(self, request):
         city_name = request.POST.get("city")
-        street_name = request.POSt.get("street")
+        street_name = request.POST.get("street")
         house = request.POST.get("house_no")
         local = request.POST.get("local_no")
         postal = request.POST.get("postal_code")

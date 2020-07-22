@@ -9,7 +9,7 @@ Detale użytkownika
     <p>Imię: {{ person.first_name }}</p>
     <p>Nazwisko: {{ person.last_name}}</p>
     <p>Opis:</p>
-    <textarea readonly="readonly" cols="50" rows="50">{{ person.description }}</textarea>
+    <textarea readonly="readonly" cols="50" rows="10">{{ person.description }}</textarea>
     <div>
         Adress:
         {% if address %}
@@ -18,7 +18,7 @@ Detale użytkownika
         <p>Numer domu: {{ address.house_no }}</p>
         <p>Numer lokalu: {{ address.local_no }}</p>
         <p>Kod pocztowy: {{ address.postal_code }}</p>
-        {% empty %}}
+        {% else %}
         Nie podano adresu.
         {% endif %}
     </div>
@@ -28,23 +28,25 @@ Detale użytkownika
         <li>{{ phone.number }} - {{ phone.get_type_display }} </li>
         {% endfor %}
     </ul>
-    {% empty %}
+    {% else %}
     <p> Brak numeru telefonu</p>
     {% endif %}
+    <a href="{% url 'add_phone' person_id=person.id %}">Dodaj nowy numer telefonu</a>
         {% if emails %}
     <ul>Emails:
         {% for email in emails %}
         <li>{{ email.email }} - {{ email.get_type_display }} </li>
         {% endfor %}
     </ul>
-    {% empty %}
+    {% else %}
     <p>Brak emaila</p>
     {% endif %}
+    <a href="{% url 'add_email' person_id=person.id %}">Dodaj nowy e-mail</a>
     {% if groups %}
     <p>Należy do grup:</p>
     <ul>
-        {% for email in emails %}
-        <li><a href="">{{ group.name }}</a> </li>
+        {% for group in groups %}
+        <li><a href="{% url 'groups_detail' group_id=group.id">{{ group.name }}</a> </li>
         {% endfor %}
     </ul>
     {% endif %}
