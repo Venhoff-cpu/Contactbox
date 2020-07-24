@@ -45,7 +45,7 @@ class AddPerson(View):
         name = request.POST.get("first_name")
         surname = request.POST.get("last_name")
         description = request.POST.get("description")
-        myFile = request.FILES.get("photo")
+        my_file = request.FILES.get("photo")
         address_id = request.POST.get("address")
         print(address_id)
         address = Address.objects.get(pk=request.POST.get("address"))
@@ -53,10 +53,10 @@ class AddPerson(View):
             first_name=name,
             last_name=surname,
             description=description,
-            photo=myFile,
+            photo=my_file,
             address=address,
         )
-        return redirect("main")
+        return redirect("person", person_id=new_person.id)
 
 
 class AddAddress(View):
@@ -83,7 +83,21 @@ class AddAddress(View):
 
 
 class AddPhone(View):
-    pass
+
+    def get(self, request, person_id):
+        phone_type = Phone.TYPE_OF_PHONE
+        return render(request, "add_phone_to_person.html", {"phone_type":phone_type})
+
+    def post(self, request, person_id):
+        phone_type = request.POST.get("phone_type")
+        phone_number = int(request.POST.get("phone_number"))
+        person = Person.objects.get(pk=person_id)
+        new_phone = Phone.objects.create(
+            type=phone_type,
+            number=phone_number,
+            person=person,
+        )
+        return redirect("person", person_id=person_id)
 
 
 class AddEmail(View):

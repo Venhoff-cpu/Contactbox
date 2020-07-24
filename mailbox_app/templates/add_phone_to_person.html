@@ -5,5 +5,19 @@ Add phone
 {% endblock %}
 
 {% block content %}
-
+    <h2>Formularz dodawania telefonu</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <labe for="phone_type">Phone type:</labe>
+        <select class="form-control" id="phone_type" name="phone_type">
+            {% for value, name in phone_type %}
+                <option value="{{value}}">
+                    {{ name }}
+                </option>
+            {% endfor %}
+        </select><br>
+        <label for="number">Numer telefonu:</label>
+        <input type="text" id="number" pattern="\d*" name="phone_number">
+        <input type="submit" value="Zapisz">
+    </form>
 {% endblock %}

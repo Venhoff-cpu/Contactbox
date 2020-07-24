@@ -15,7 +15,7 @@ Dodawanie osób
     <label for="desc">Dodatkowy opis:</label>
     <textarea id="desc" name="description" maxlength="250" rows="5" cols="50"></textarea><br>
     <labe for="address">Adress (opcjonalnie):</labe>
-    <select class="form-control" id="address" name="address" id="recipe">
+    <select class="form-control" id="address" name="address">
         {% for address in addresses %}
             <option value="{{address.id}}">
                 {{ address.city }}; {{address.street}} {{address.house_no}}, lokal: {{address.local_no}}
