@@ -91,17 +91,33 @@ class AddPhone(View):
     def post(self, request, person_id):
         phone_type = request.POST.get("phone_type")
         phone_number = int(request.POST.get("phone_number"))
-        person = Person.objects.get(pk=person_id)
+        person = get_object_or_404(Person, pk=person_id)
         new_phone = Phone.objects.create(
             type=phone_type,
             number=phone_number,
             person=person,
         )
+        messages.add_message(request, messages.INFO, f"Dodano nowy numer telefonu: {phone_number}")
         return redirect("person", person_id=person_id)
 
 
 class AddEmail(View):
-    pass
+
+    def get(self, request, person_id):
+        mail_type = Email.TYPE_OF_MAIL
+        return render(request, "add_maile_to_person.html", {"mail_type": mail_type})
+
+    def post(self, request, person_id):
+        mail_type = request.POST.get("mail_type")
+        email = request.POST.get("email")
+        person = get_object_or_404(Person, pk=person_id)
+        new_email = Email.objects.create(
+            type=mail_type,
+            email=email,
+            person=person,
+        )
+        messages.add_message(request, messages.INFO, f"Dodano nowy numer email: {email}")
+        return redirect("person", person_id=person_id)
 
 
 class ModifyPerson(View):

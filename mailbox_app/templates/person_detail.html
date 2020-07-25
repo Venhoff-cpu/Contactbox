@@ -23,21 +23,21 @@ Detale użytkownika
         {% endif %}
     </div>
     {% if phones %}
-    <ul>Phones:
+    <ol>Phones:
         {% for phone in phones %}
         <li>{{ phone.number }} - {{ phone.get_type_display }} </li>
         {% endfor %}
-    </ul>
+    </ol>
     {% else %}
     <p> Brak numeru telefonu</p>
     {% endif %}
     <a href="{% url 'add_phone' person_id=person.id %}">Dodaj nowy numer telefonu</a>
         {% if emails %}
-    <ul>Emails:
+    <ol>Emails:
         {% for email in emails %}
         <li>{{ email.email }} - {{ email.get_type_display }} </li>
         {% endfor %}
-    </ul>
+    </ol>
     {% else %}
     <p>Brak emaila</p>
     {% endif %}
