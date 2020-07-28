@@ -1,2 +1,2 @@
-# Mail_box
-Simple mailbox in Django framework
+# Contactbox
+Simple contactbox made in Django framework.
