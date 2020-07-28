@@ -23,15 +23,18 @@ class Main(View):
 
 
 class PersonDetail(View):
-    def get(self, request, person_id):
-        ctx = {}
+    def get_context_data(self, person_id, **kwargs):
+        ctx = super(PersonDetail, self).get_context_data(**kwargs)
         person = get_object_or_404(Person, pk=person_id)
         ctx["person"] = person
         ctx["address"] = person.address
         ctx["phones"] = Phone.objects.filter(person=person.id)
         ctx["emails"] = Email.objects.filter(person=person.id)
         ctx["groups"] = Group.objects.filter(person=person.id)
-        return render(request, "person_detail.html", ctx)
+        return ctx
+
+    def get(self, request, person_id):
+        return render(request, "person_detail.html", self.get_context_data(person_id))
 
 
 class AddPerson(View):
@@ -120,8 +123,13 @@ class AddEmail(View):
         return redirect("person", person_id=person_id)
 
 
-class ModifyPerson(View):
-    pass
+class ModifyPerson(PersonDetail):
+
+    def get(self, request):
+        return render(request, "person_detail.html")
+
+    def post(self, request, person_id):
+        perosn_to_modify = get_object_or_404(Person, pk=person_id)
 
 
 class DeletePerson(View):
@@ -142,7 +150,43 @@ class DeletePerson(View):
             person_surname = person_to_delete.last_name
             person_to_delete.delete()
             messages.add_message(request, messages.INFO, f"Uzytkownik {person_name} {person_surname} usunięty z "
-                                                         f"listy uzytkowników")
+                                                         f"kontaktów")
+            return redirect("main")
+        else:
+            messages.add_message(request, messages.INFO, f"nastąpił nieoczekiwany błąd")
+            return redirect("main")
+
+
+class DeletePhone(View):
+    def get(self, request, phone_id):
+        return render(request, "delete_phone.html")
+
+    def post(self, request, phone_id):
+
+        if "No" in request.POST.get("del"):
+            return redirect("main")
+        elif "Yes" in request.POST.get("del"):
+            phone_to_delete = get_object_or_404(Person, pk=phone_id)
+            phone_to_delete.delete()
+            messages.add_message(request, messages.INFO, f"Telefon usunięty.")
+            return redirect("main")
+        else:
+            messages.add_message(request, messages.INFO, f"nastąpił nieoczekiwany błąd")
+            return redirect("main")
+
+
+class DeleteEmail(View):
+    def get(self, request, email_id):
+        return render(request, "delete_email.html")
+
+    def post(self, request, email_id):
+
+        if "No" in request.POST.get("del"):
+            return redirect("main")
+        elif "Yes" in request.POST.get("del"):
+            email_to_delete = get_object_or_404(Person, pk=email_id)
+            email_to_delete.delete()
+            messages.add_message(request, messages.INFO, f"Email usunięty.")
             return redirect("main")
         else:
             messages.add_message(request, messages.INFO, f"nastąpił nieoczekiwany błąd")
@@ -150,7 +194,18 @@ class DeletePerson(View):
 
 
 class GroupsList(View):
-    pass
+
+    def get(self, request):
+        group_list = Group.objects.all().order_by("name")
+        paginator = Paginator(group_list, 50)
+
+        page = request.GET.get("page")
+        groups = paginator.get_page(page)
+        ctx = {
+            "groups": groups,
+        }
+        return render(request, "group_list.html", ctx)
+
 
 
 class GroupDetail(View):
@@ -158,6 +213,10 @@ class GroupDetail(View):
 
 
 class AddGroup(View):
+    pass
+
+
+class DeleteGroup(View):
     pass
 
 

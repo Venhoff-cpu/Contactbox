@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from mailbox_app.views import Main, PersonDetail, AddAddress, AddPerson, AddPhone, AddEmail, ModifyPerson, \
-    DeletePerson, GroupsList, GroupDetail, AddGroup, AddPersonToGroup
+    DeletePerson, GroupsList, GroupDetail, AddGroup, AddPersonToGroup, DeletePhone, DeleteEmail, DeleteGroup
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,10 +31,13 @@ urlpatterns = [
     path('new-person/', AddPerson.as_view(), name="add_person"),
     path('add-address', AddAddress.as_view(), name="add_address"),
     path('delete/<int:person_id>', DeletePerson.as_view(), name="delete"),
+    path('delete/<int:phone_id>', DeletePhone.as_view(), name="delete_phone"),
+    path('delete/<int:email_id>', DeleteEmail.as_view(), name="delete_email"),
     path('groups/', GroupsList.as_view, name="groups"),
     path('groups/<int:group_id>', GroupDetail.as_view, name="groups_detail"),
     path('groups/<int:group_id>/add-person', AddPersonToGroup.as_view, name="add_person_to_group"),
     path('add-group/', AddGroup, name="add_group"),
+    path('delete/<int:group_id>', DeleteGroup.as_view(), name="delete_group"),
 ]
 
 if settings.DEBUG:

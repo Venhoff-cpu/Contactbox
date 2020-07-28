@@ -5,5 +5,61 @@ Person Edit
 {% endblock %}
 
 {% block content %}
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="f_name">Imię:</label>
+    <input type="text" id="f_name" name="first_name" maxlength="64" value="{{person.first_name}}" required>
+    <label for="l_name">Nazwisko:</label>
+    <input type="text" id="l_name" name="last_name" maxlength="64" value="{{person.last_name}}" required><br>
+    <label for="desc">Dodatkowy opis:</label>
+    <textarea id="desc" name="description" maxlength="250" rows="5" cols="50" value="{{person.description}}">
+    </textarea><br>
+    <label for="address">Adress (opcjonalnie):</label>
+    <select class="form-control" id="address" name="address">
+        {% for address in addresses %}
+            {% if {{person.address}} = address %}
+            <option selected value="{{address.id}}">
+                {{ address.city }}; {{address.street}} {{address.house_no}}, lokal: {{address.local_no}}
+            </option>
+            {% else %}
+            <option value="{{address.id}}">
+                {{ address.city }}; {{address.street}} {{address.house_no}}, lokal: {{address.local_no}}
+            </option>
+        {% empty %}
+        {% endfor %}
+    </select><br>
+    <img src="{{person.photo.url}}">
+    <label for="zdjecie">Wczytaj nowe zdjęcie:</label>
+    <input type="file" id="zdjecie" name="photo">
+    {% if phones %}
+    <ol>Phones:
+        {% for phone in phones %}
+        <li>
+            {{ phone.number }} - {{ phone.get_type_display }}
+            <a href="{% url 'delete_email' email_id=email.id" class="button1">Usuń</a>
+        </li>
+        {% endfor %}
+    </ol>
+    {% else %}
+    <p> Brak numeru telefonu</p>
+    {% endif %}
+    <a href="{% url 'add_phone' person_id=person.id %}">Dodaj nowy numer telefonu</a>
+        {% if emails %}
+    <ol>Emails:
+        {% for email in emails %}
+        <li>
+            {{ email.email }} - {{ email.get_type_display }}
+            <a href="{% url 'delete_email' email_id=email.id" class="button1">
+            Usuń
+            </a>
+        </li>
+        {% endfor %}
+    </ol>
+    {% else %}
+    <p>Brak emaila</p>
+    {% endif %}
+    <a href="{% url 'add_email' person_id=person.id %}">Dodaj nowy e-mail</a>
+    <input type="submit" value="Zapisz">
 
+</form>
 {% endblock %}
