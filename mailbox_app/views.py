@@ -23,18 +23,21 @@ class Main(View):
 
 
 class PersonDetail(View):
+    template_name = "person_detail.html"
+
     def get_context_data(self, person_id, **kwargs):
-        ctx = super(PersonDetail, self).get_context_data(**kwargs)
+        ctx = {}
         person = get_object_or_404(Person, pk=person_id)
         ctx["person"] = person
         ctx["address"] = person.address
+        ctx["addresses"] = Address.objects.all()
         ctx["phones"] = Phone.objects.filter(person=person.id)
         ctx["emails"] = Email.objects.filter(person=person.id)
         ctx["groups"] = Group.objects.filter(person=person.id)
         return ctx
 
     def get(self, request, person_id):
-        return render(request, "person_detail.html", self.get_context_data(person_id))
+        return render(request, self.template_name, self.get_context_data(person_id))
 
 
 class AddPerson(View):
@@ -50,7 +53,6 @@ class AddPerson(View):
         description = request.POST.get("description")
         my_file = request.FILES.get("photo")
         address_id = request.POST.get("address")
-        print(address_id)
         address = Address.objects.get(pk=request.POST.get("address"))
         new_person = Person.objects.create(
             first_name=name,
@@ -89,7 +91,7 @@ class AddPhone(View):
 
     def get(self, request, person_id):
         phone_type = Phone.TYPE_OF_PHONE
-        return render(request, "add_phone_to_person.html", {"phone_type":phone_type})
+        return render(request, "add_phone_to_person.html", {"phone_type": phone_type})
 
     def post(self, request, person_id):
         phone_type = request.POST.get("phone_type")
@@ -124,12 +126,19 @@ class AddEmail(View):
 
 
 class ModifyPerson(PersonDetail):
-
-    def get(self, request):
-        return render(request, "person_detail.html")
+    template_name = "modify_person.html"
 
     def post(self, request, person_id):
-        perosn_to_modify = get_object_or_404(Person, pk=person_id)
+        person = get_object_or_404(Person, pk=person_id)
+        person.first_name = request.POST.get("first_name")
+        person.last_name = request.POST.get("last_name")
+        person.description = request.POST.get("description")
+        if request.FILES.get("photo"):
+            person.photo = request.FILES.get("photo")
+        person.address = Address.objects.get(pk=request.POST.get("address"))
+        person.save()
+        messages.add_message(request, messages.SUCCESS, "Zaktualizowano pomyślnie")
+        return redirect("modify_person", person_id=person_id)
 
 
 class DeletePerson(View):
@@ -163,16 +172,13 @@ class DeletePhone(View):
 
     def post(self, request, phone_id):
 
-        if "No" in request.POST.get("del"):
-            return redirect("main")
-        elif "Yes" in request.POST.get("del"):
-            phone_to_delete = get_object_or_404(Person, pk=phone_id)
+        phone_to_delete = get_object_or_404(Phone, pk=phone_id)
+        person_id = phone_to_delete.person.id
+        if "Yes" in request.POST.get("del"):
             phone_to_delete.delete()
             messages.add_message(request, messages.INFO, f"Telefon usunięty.")
-            return redirect("main")
-        else:
-            messages.add_message(request, messages.INFO, f"nastąpił nieoczekiwany błąd")
-            return redirect("main")
+
+        return redirect("modify_person", person_id=person_id)
 
 
 class DeleteEmail(View):
@@ -181,16 +187,13 @@ class DeleteEmail(View):
 
     def post(self, request, email_id):
 
-        if "No" in request.POST.get("del"):
-            return redirect("main")
-        elif "Yes" in request.POST.get("del"):
-            email_to_delete = get_object_or_404(Person, pk=email_id)
+        email_to_delete = get_object_or_404(Email, pk=email_id)
+        person_id = email_to_delete.person.id
+        if "Yes" in request.POST.get("del"):
             email_to_delete.delete()
             messages.add_message(request, messages.INFO, f"Email usunięty.")
-            return redirect("main")
-        else:
-            messages.add_message(request, messages.INFO, f"nastąpił nieoczekiwany błąd")
-            return redirect("main")
+
+        return redirect("modify_person", person_id=person_id)
 
 
 class GroupsList(View):

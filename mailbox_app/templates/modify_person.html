@@ -16,8 +16,8 @@ Person Edit
     </textarea><br>
     <label for="address">Adress (opcjonalnie):</label>
     <select class="form-control" id="address" name="address">
-        {% for address in addresses %}
-            {% if {{person.address}} = address %}
+        {% for option in addresses %}
+            {% if address == option %}
             <option selected value="{{address.id}}">
                 {{ address.city }}; {{address.street}} {{address.house_no}}, lokal: {{address.local_no}}
             </option>
@@ -25,10 +25,15 @@ Person Edit
             <option value="{{address.id}}">
                 {{ address.city }}; {{address.street}} {{address.house_no}}, lokal: {{address.local_no}}
             </option>
+            {% endif %}
         {% empty %}
         {% endfor %}
     </select><br>
+    {% if person.photo.url %}
     <img src="{{person.photo.url}}">
+    {% else %}
+    <img src="">
+    {% endif %}
     <label for="zdjecie">Wczytaj nowe zdjęcie:</label>
     <input type="file" id="zdjecie" name="photo">
     {% if phones %}
@@ -36,7 +41,7 @@ Person Edit
         {% for phone in phones %}
         <li>
             {{ phone.number }} - {{ phone.get_type_display }}
-            <a href="{% url 'delete_email' email_id=email.id" class="button1">Usuń</a>
+            <a href="{% url 'delete_phone' phone_id=phone.id %}" class="button1">Usuń</a>
         </li>
         {% endfor %}
     </ol>
@@ -49,7 +54,7 @@ Person Edit
         {% for email in emails %}
         <li>
             {{ email.email }} - {{ email.get_type_display }}
-            <a href="{% url 'delete_email' email_id=email.id" class="button1">
+            <a href="{% url 'delete_email' email_id=email.id %}" class="button1">
             Usuń
             </a>
         </li>
@@ -58,8 +63,7 @@ Person Edit
     {% else %}
     <p>Brak emaila</p>
     {% endif %}
-    <a href="{% url 'add_email' person_id=person.id %}">Dodaj nowy e-mail</a>
+    <a href="{% url 'add_email' person_id=person.id %}">Dodaj nowy e-mail</a><br>
     <input type="submit" value="Zapisz">
-
 </form>
 {% endblock %}

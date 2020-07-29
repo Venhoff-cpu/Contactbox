@@ -18,7 +18,11 @@ Lista Osób
             </tr>
             {% for person in persons %}
             <tr>
-                <td><img src="{{person.photo.url}}"></td>
+                {% if person.photo.url %}
+                <td><img src="{{ person.photo.url }}"></td>
+                {% else %}
+                <td>Brak zdjęcia</td>
+                {% endif %}
                 <td>{{person.first_name}}</td>
                 <td>{{person.last_name}}</td>
                 <td>{{person.description}}</td>
@@ -38,6 +42,7 @@ Lista Osób
             {% endfor %}
         </table>
         <a class="button1" href="{% url 'add_person' %}">Dodaj osobę</a>
+        <a class="button1" href="{% url 'groups' %}" style="display: inline">Przejdź do widoku grup</a>
     </div>
 <div>
     {% if persons.has_other_pages %}
