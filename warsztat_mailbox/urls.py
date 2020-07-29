@@ -33,10 +33,10 @@ urlpatterns = [
     path('delete/<int:person_id>', DeletePerson.as_view(), name="delete"),
     path('delete-phone/<int:phone_id>', DeletePhone.as_view(), name="delete_phone"),
     path('delete-email/<int:email_id>', DeleteEmail.as_view(), name="delete_email"),
-    path('groups/', GroupsList.as_view, name="groups"),
-    path('groups/<int:group_id>', GroupDetail.as_view, name="groups_detail"),
-    path('groups/<int:group_id>/add-person', AddPersonToGroup.as_view, name="add_person_to_group"),
-    path('add-group/', AddGroup, name="add_group"),
+    path('groups/', GroupsList.as_view(), name="groups"),
+    path('groups/<int:group_id>', GroupDetail.as_view(), name="group_detail"),
+    path('groups/<int:group_id>/add-person', AddPersonToGroup.as_view(), name="add_person_to_group"),
+    path('add-group/', AddGroup.as_view(), name="add_group"),
     path('delete/<int:group_id>', DeleteGroup.as_view(), name="delete_group"),
 ]
 

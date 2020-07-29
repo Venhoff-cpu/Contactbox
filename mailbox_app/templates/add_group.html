@@ -5,5 +5,10 @@ Adding user group
 {% endblock %}
 
 {% block content %}
-
+<form method="post">
+    {% csrf_token %}
+    <label for="group_name">Nazwa grupy kontaktów</label>
+    <input type="text" id="group_name" name="name" maxlength="124" required>
+    <input type="submit" value="Utwórz grupę">
+</form>
 {% endblock %}

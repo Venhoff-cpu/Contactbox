@@ -210,17 +210,35 @@ class GroupsList(View):
         return render(request, "group_list.html", ctx)
 
 
-
 class GroupDetail(View):
     pass
 
 
 class AddGroup(View):
-    pass
+    def get(self, request):
+        return render(request, "add_group.html")
+
+    def post(self, request):
+        if request.POST.get("name"):
+            Group.objects.create(name=request.POST.get("name"))
+            messages.add_message(request, messages.INFO, f"Dodano grupę kontaktów")
+            return redirect("groups")
+        else:
+            messages.add_message(request, messages.INFO, f"Podaj nazwę grupy kontaktów")
+            return redirect("add_group")
 
 
 class DeleteGroup(View):
-    pass
+    def get(self, request, group_id):
+        return render(request, "delete_group.html")
+
+    def post(self, request, group_id):
+        group_to_delete = get_object_or_404(Group, pk=group_id)
+        if "Yes" in request.POST.get("del"):
+            group_to_delete.delete()
+            messages.add_message(request, messages.INFO, f"Grupa kontaktów usunięta.")
+
+        return redirect("groups")
 
 
 class AddPersonToGroup(View):

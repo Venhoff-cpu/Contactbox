@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 
 {% block title %}
-Usuwanie telefonu
+Usuwanie grupy
 {% endblock %}
 
 {% block content %}
-<form method="POST" action="#">
+<form method="POST">
     {% csrf_token %}
-    Czy na pewno usunąć telefon?
+    Czy na pewno usunąć osobę - grupę kontaktów?<br>
+    Dane kontaktowe osób należących do grupy nie zostana usunięte.
     <button type="submit" class="button1" value="Yes" name="del">Tak</button>
     <button type="submit" class="button1" value="No" name="del">Nie</button>
 </form>
