@@ -5,5 +5,72 @@ Group details
 {% endblock %}
 
 {% block content %}
+    <div class="table-users">
+        <div class="header">{{group.name}}</div>
 
+        <table cellspacing="0">
+            <tr>
+                <th>Zdjęcie</th>
+                <th>Nazwisko</th>
+                <th>Imię</th>
+                <th>Opis</th>
+                <th>Akcje</th>
+            </tr>
+            {% for person in persons %}
+            <tr>
+                {% if person.photo.url %}
+                <td><img src="{{ person.photo.url }}"></td>
+                {% else %}
+                <td>Brak zdjęcia</td>
+                {% endif %}
+                <td>{{person.first_name}}</td>
+                <td>{{person.last_name}}</td>
+                <td>{{person.description}}</td>
+                <td>
+                    <form action="{% url 'remove_person_from_group' group_id=group.id person_id=person.id %}"
+                          style="display: inline"
+                          method="GET">
+                        {% csrf_token %}
+                        <button type="submit" class="button1">Usuń z grupy</button>
+                    </form>
+                    <a href="{% url 'modify_person' person_id=person.id %}" class="button1">Modyfikuj</a>
+                    <a href="{% url 'person' person_id=person.id %}" class="button1">Szczegóły</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Brak użytkowników</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <a class="button1" href="{% url 'add_person_to_group' group_id=group.id%}">
+            Dodaj osobę do grupy
+        </a>
+        <a class="button1" href="{% url 'main' %}" style="display: inline">
+            Przejdź do widoku listy kontaktów
+        </a>
+    </div>
+<div>
+    {% if persons.has_other_pages %}
+        <ul class="pagination">
+            {% if persons.has_previous %}
+                <li><a href="?page={{ persons.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in persons.paginator.page_range %}
+                {% if persons.number == i %}
+                    <li class="active"><span> {{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                    <li><a href="?page={{ i }}"> {{ i }} </a></li>
+                {% endif %}
+            {% endfor %}
+            {% if persons.has_next %}
+                <li><a href="?page={{ persons.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+    {% endif %}
+</div>
 {% endblock %}

@@ -7,7 +7,7 @@ Usuwanie osoby
 {% block content %}
 <form method="POST">
     {% csrf_token %}
-    Czy na pewno usunąć osobę - {{name}} {{last_name}}?
+    Czy na pewno usunąć osobę z danej grupy - {{name}} {{last_name}}?
     <button type="submit" class="button1" value="Yes" name="del">Tak</button>
     <button type="submit" class="button1" value="No" name="del">Nie</button>
 </form>

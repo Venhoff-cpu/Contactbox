@@ -5,5 +5,67 @@ Assign user to a group
 {% endblock %}
 
 {% block content %}
-
+<table cellspacing="0">
+            <tr>
+                <th>Zdjęcie</th>
+                <th>Nazwisko</th>
+                <th>Imię</th>
+                <th>Opis</th>
+                <th>Akcje</th>
+            </tr>
+            {% for person in persons %}
+            <tr>
+                {% if person.photo.url %}
+                <td><img src="{{ person.photo.url }}"></td>
+                {% else %}
+                <td>Brak zdjęcia</td>
+                {% endif %}
+                <td>{{person.first_name}}</td>
+                <td>{{person.last_name}}</td>
+                <td>{{person.description}}</td>
+                <td>
+                    <form style="display: inline" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="button1" name="add" value="{{person.id}}">
+                            Dodaj do grupy
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Brak użytkowników do dodania</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <a class="button1" href="{% url 'group_detail' group_id=group.id%}">
+            Wróc do widoku grupy
+        </a>
+        <a class="button1" href="{% url 'main' %}" style="display: inline">
+            Przejdź do widoku listy kontaktów
+        </a>
+    </div>
+<div>
+    {% if persons.has_other_pages %}
+        <ul class="pagination">
+            {% if persons.has_previous %}
+                <li><a href="?page={{ persons.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in persons.paginator.page_range %}
+                {% if persons.number == i %}
+                    <li class="active"><span> {{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                    <li><a href="?page={{ i }}"> {{ i }} </a></li>
+                {% endif %}
+            {% endfor %}
+            {% if persons.has_next %}
+                <li><a href="?page={{ persons.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+    {% endif %}
+</div>
 {% endblock %}

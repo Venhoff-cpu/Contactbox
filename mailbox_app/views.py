@@ -211,7 +211,17 @@ class GroupsList(View):
 
 
 class GroupDetail(View):
-    pass
+    def get(self, request, group_id):
+        ctx = {}
+        group = get_object_or_404(Group, pk=group_id)
+        person_list = group.person.all().order_by("first_name", "last_name")
+        paginator = Paginator(person_list, 50)
+
+        page = request.GET.get("page")
+        persons = paginator.get_page(page)
+        ctx["group"] = group
+        ctx["persons"] = persons
+        return render(request, "group_detail.html", ctx)
 
 
 class AddGroup(View):
@@ -242,7 +252,47 @@ class DeleteGroup(View):
 
 
 class AddPersonToGroup(View):
-    pass
+    def get(self, request, group_id):
+        group = get_object_or_404(Group, pk=group_id)
+        persons = Person.objects.exclude(pk__in=group.person)
+        ctx = {}
+        ctx["group"] = group
+        ctx["persons"] = persons
+        return render(request, "add_person_to_group.html", ctx)
+
+    def post(self, request, group_id):
+        perosn_to_add = get_object_or_404(Person, pk=request.POST.get("add"))
+        group = get_object_or_404(Group, pk=group_id)
+        group.person.add(perosn_to_add)
+        messages.add_message(request, messages.INFO, f"Dodano {perosn_to_add.first_name}"
+                                                     f"{perosn_to_add.last_name}")
+        return redirect("group_detail", pk=group_id)
+
+
+class RemovePersonFromGroup(View):
+    def get(self, request, group_id, person_id):
+        person = get_object_or_404(Person, pk=person_id)
+        ctx = {
+            "name": person.first_name,
+            "last_name": person.last_name,
+        }
+        return render(request, "remove_person_group.html", ctx)
+
+    def post(self, request, person_id, group_id):
+        if "No" in request.POST.get("del"):
+            return redirect("group_detail", group_id=group_id)
+        elif "Yes" in request.POST.get("del"):
+            person_to_remove = get_object_or_404(Person, pk=person_id)
+            group = get_object_or_404(Group, pk=group_id)
+            group.person.remove(person_to_remove)
+            person_name = person_to_remove.first_name
+            person_surname = person_to_remove.last_name
+            messages.add_message(request, messages.INFO, f"Uzytkownik {person_name} {person_surname} usunięty z "
+                                                         f"grupy")
+        else:
+            messages.add_message(request, messages.INFO, f"nastąpił nieoczekiwany błąd")
+
+        return redirect("group_detail", group_id=group_id)
 
 
 class SearchPerson(View):
